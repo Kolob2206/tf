@@ -1,0 +1,33 @@
+name = "asdf"
+default_guided_failure_mode = "EnvironmentDefault"
+description = ""
+multi_tenancy_mode = "TenantedOrUntenanted"
+
+connectivity_policy {
+    allow_deployments_to_no_targets = true
+}
+
+run_retention_policy {
+    quantity_to_keep = 100
+}
+
+process {
+    step "run-a-script" {
+        name = "Run a Script"
+        properties = {
+            Octopus.Action.TargetRoles = "blurp"
+        }
+
+        action {
+            action_type = "Octopus.Script"
+            properties = {
+                Octopus.Action.RunOnServer = "false"
+                Octopus.Action.Script.ScriptBody = "asdf"
+                Octopus.Action.Script.ScriptSource = "Inline"
+                Octopus.Action.Script.Syntax = "PowerShell"
+                OctopusUseBundledTooling = "False"
+            }
+            worker_pool_variable = ""
+        }
+    }
+}
