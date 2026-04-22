@@ -17,3 +17,61 @@ step "run-a-script" {
         }
     }
 }
+
+step "update-amazon-ecs-service" {
+    name = "Update Amazon ECS Service"
+    package_requirement = "AfterPackageAcquisition"
+    properties = {
+        Octopus.Action.TargetRoles = "aks"
+    }
+
+    action {
+        action_type = "aws-ecs-update-service"
+        properties = {
+            OctopusUseBundledTooling = "False"
+        }
+        step_package_version = "1.6.0"
+        worker_pool = "hosted-ubuntu"
+
+        container {
+            feed = "dockerhub"
+            image = "octopusdeploy/worker-tools:6.5.0-ubuntu.22.04"
+        }
+
+        packages "asdf" {
+            acquisition_location = "NotAcquired"
+            feed = "dockerhub"
+            package_id = "asdf/asdf"
+            step_package_inputs_reference_id = "2dd19eb4-4b6a-492f-8a72-20c36e027dd0"
+        }
+
+        inputs {
+            serviceName = "serv"
+            targetTaskDefinitionName = "task"
+            templateTaskDefinitionName = "asdf"
+
+            containers {
+                containerName = "asdf"
+
+                containerImageReference {
+                    feedId = "Feeds-3209"
+                    imageName = "asdf/asdf"
+                    referenceId = "2dd19eb4-4b6a-492f-8a72-20c36e027dd0"
+                }
+
+                environmentFiles {
+                    type = "none"
+                }
+
+                environmentVariables {
+                    type = "none"
+                }
+            }
+
+            waitOption {
+                timeout = 30
+                type = "waitWithTimeout"
+            }
+        }
+    }
+}
