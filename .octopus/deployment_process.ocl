@@ -75,3 +75,22 @@ step "update-amazon-ecs-service" {
         }
     }
 }
+
+step "run-a-script-version-bumbum" {
+    name = "Run a Script: Version bumbum"
+    properties = {
+        Octopus.Action.TargetRoles = "drop"
+    }
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.RunOnServer = "false"
+            Octopus.Action.Script.ScriptBody = "write-host 'hi'"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool_variable = ""
+    }
+}
