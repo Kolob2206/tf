@@ -26,11 +26,14 @@ step "update-amazon-ecs-service" {
     }
 
     action {
-        action_type = "aws-ecs-update-service"
         properties = {
+            Octopus.Action.Aws.Ecs.Update.ContainerUpdates = "[{\"containerName\":\"asdf\",\"packageReference\":\"asdf\"}]"
+            Octopus.Action.Aws.Ecs.Update.ServiceName = "serv"
+            Octopus.Action.Aws.Ecs.Update.TargetTaskDefinitionName = "task"
+            Octopus.Action.Aws.Ecs.Update.TemplateTaskDefinitionName = "asdf"
+            Octopus.Action.Aws.Ecs.WaitOption = "{\"type\":\"WaitWithTimeout\",\"timeoutMinutes\":\"30\"}"
             OctopusUseBundledTooling = "False"
         }
-        step_package_version = "1.6.0"
         worker_pool = "hosted-ubuntu"
 
         container {
@@ -42,37 +45,9 @@ step "update-amazon-ecs-service" {
             acquisition_location = "NotAcquired"
             feed = "dockerhub"
             package_id = "asdf/asdf"
-            step_package_inputs_reference_id = "2dd19eb4-4b6a-492f-8a72-20c36e027dd0"
         }
 
-        inputs {
-            serviceName = "serv"
-            targetTaskDefinitionName = "task"
-            templateTaskDefinitionName = "asdf"
-
-            containers {
-                containerName = "asdf"
-
-                containerImageReference {
-                    feedId = "Feeds-3209"
-                    imageName = "asdf/asdf"
-                    referenceId = "2dd19eb4-4b6a-492f-8a72-20c36e027dd0"
-                }
-
-                environmentFiles {
-                    type = "none"
-                }
-
-                environmentVariables {
-                    type = "none"
-                }
-            }
-
-            waitOption {
-                timeout = 30
-                type = "waitWithTimeout"
-            }
-        }
+        action_type = "Octopus.AwsUpdateEcsService"
     }
 }
 
