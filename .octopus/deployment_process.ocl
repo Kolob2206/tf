@@ -4,9 +4,9 @@ step "run-a-script" {
     action {
         action_type = "Octopus.Script"
         properties = {
-            Octopus.Action.Script.ScriptBody = "write-host 'hi'"
-            Octopus.Action.Script.ScriptSource = "Inline"
-            Octopus.Action.Script.Syntax = "PowerShell"
+            Octopus.Action.GitRepository.Source = "Project"
+            Octopus.Action.Script.ScriptFileName = "scripts/stuff.ps1"
+            Octopus.Action.Script.ScriptSource = "GitRepository"
             OctopusUseBundledTooling = "False"
         }
         worker_pool = "hosted-ubuntu"
@@ -20,12 +20,12 @@ step "run-a-script" {
 
 step "update-amazon-ecs-service" {
     name = "Update Amazon ECS Service"
-    package_requirement = "AfterPackageAcquisition"
     properties = {
         Octopus.Action.TargetRoles = "aks"
     }
 
     action {
+        action_type = "Octopus.AwsUpdateEcsService"
         properties = {
             Octopus.Action.Aws.Ecs.Update.ContainerUpdates = "[{\"containerName\":\"asdf\",\"packageReference\":\"asdf\"}]"
             Octopus.Action.Aws.Ecs.Update.ServiceName = "serv"
@@ -46,8 +46,6 @@ step "update-amazon-ecs-service" {
             feed = "dockerhub"
             package_id = "asdf/asdf"
         }
-
-        action_type = "Octopus.AwsUpdateEcsService"
     }
 }
 
